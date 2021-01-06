@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 from urllib.parse import urlparse
+import dj_database_url
 
 from django.core.management.utils import get_random_secret_key
 import os
@@ -84,15 +85,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 if os.getenv("DATABASE_URL", "") != "":
     r = urlparse(os.environ.get("DATABASE_URL"))
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.path.realpath(r.path),
-            'USER': r.username,
-            'PASSWORD': r.password,
-            'HOST': r.hostname,
-            'PORT': r.port,
-            'OPTIONS': {'sslmode': 'require'},
-        }
+        "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
     }
 else:
     DATABASES = {
